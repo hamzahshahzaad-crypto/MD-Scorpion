@@ -1,0 +1,522 @@
+<!DOCTYPE html> <htm
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MD-Scorpion | WhatsApp Bot Pairing Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Google Fonts: Orbitron & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Orbitron', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            scorpion: {
+              50: '#e6fffa',
+              100: '#b2f5ea',
+              400: '#319795',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#022c22',
+              accent: '#00ff9d',
+              dark: '#0a0f1d'
+            }
+          },
+          boxShadow: {
+            'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.4)',
+            'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.4)',
+            'glow-accent': '0 0 30px 2px rgba(0, 255, 157, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #070b14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(10, 15, 29, 0.8) 0px, transparent 100%);
+      background-attachment: fixed;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+    }
+    .neon-border {
+      position: relative;
+    }
+    .neon-border::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(0, 255, 157, 0.6), transparent, rgba(6, 182, 212, 0.6));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
+    .terminal-line::before {
+      content: '>';
+      color: #00ff9d;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-black">
+  <!-- Header / Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-emerald-900/30 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 flex items-center justify-center shadow-glow-emerald">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-bug text-emerald-400 text-xl animate-pulse"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display font-black text-xl tracking-wider bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+              MD-SCORPION
+            </h1>
+            <span class="text-[10px] uppercase font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">v4.2.0</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Next-Gen Multi-Device WhatsApp Automation Portal</p>
+        </div>
+      </div>
+      <!-- Action Buttons Right -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button 
+          onclick="openCodeDrawer()" 
+          class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+          <i class="fa-solid fa-code text-emerald-400"></i>
+          <span class="hidden sm:inline">Backend Source</span>
+        </button>
+        <a 
+          href="https://github.com" 
+          target="_blank" 
+          class="p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition flex items-center gap-2">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span class="hidden sm:inline">GitHub Repo</span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+    <!-- Top Hero Banner -->
+    <div class="glass-panel neon-border rounded-2xl p-6 sm:p-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 overflow-hidden relative">
+      <div class="space-y-2 z-10 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          Live Pair Engine Active • WhatsApp Multi-Device 2026 Ready
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-wide">
+          Deploy Your High-Speed WhatsApp Bot
+        </h2>
+        <p class="text-slate-300 text-sm leading-relaxed">
+          Connect your WhatsApp account safely using Baileys 8-Digit Pairing Code without scanning QR codes. Deploy on Heroku, Render, Koyeb or VPS in seconds.
+        </p>
+      </div>
+      <!-- Quick Metrics -->
+      <div class="flex items-center gap-4 z-10 shrink-0">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 text-center min-w-[90px]">
+          <div class="text-emerald-400 font-display font-bold text-xl">99.9%</div>
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Uptime</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 text-center min-w-[90px]">
+          <div class="text-teal-400 font-display font-bold text-xl">&lt;1.2s</div>
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Ping Speed</div>
+        </div>
+      </div>
+    </div>
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-800/80 pb-2 overflow-x-auto no-scrollbar">
+      <button 
+        id="tabBtn-pair"
+        onclick="switchTab('pair')" 
+        class="tab-link px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap bg-emerald-500 text-slate-950 shadow-glow-emerald">
+        <i class="fa-solid fa-key text-xs"></i>
+        <span>PAIR CODE GENERATOR</span>
+      </button>
+      <button 
+        id="tabBtn-commands"
+        onclick="switchTab('commands')" 
+        class="tab-link px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800/60">
+        <i class="fa-solid fa-terminal text-xs"></i>
+        <span>COMMANDS & SIMULATOR</span>
+      </button>
+      <button 
+        id="tabBtn-deploy"
+        onclick="switchTab('deploy')" 
+        class="tab-link px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800/60">
+        <i class="fa-solid fa-rocket text-xs"></i>
+        <span>DEPLOY & CONFIG BUILDER</span>
+      </button>
+    </div>
+    <!-- TAB 1: PAIR CODE GENERATOR -->
+    <section id="tab-pair" class="tab-content grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Pairing Form Panel (7 cols) -->
+      <div class="lg:col-span-7 glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+              WhatsApp Number Pairing
+            </h3>
+            <span class="text-xs text-slate-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Server Ready
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mb-6">
+            Enter your international phone number without spaces or symbols. Select your preferred node to optimize WebSocket handshake latency.
+          </p>
+          <div class="space-y-5">
+            <!-- Server Selector -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Select Server Node</label>
+              <div class="grid grid-cols-3 gap-3">
+                <label class="cursor-pointer">
+                  <input type="radio" name="server_node" value="us" class="peer hidden" checked />
+                  <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 peer-checked:border-emerald-500 peer-checked:bg-emerald-950/20 text-center transition">
+                    <div class="text-xs font-bold text-white">Node 1</div>
+                    <div class="text-[10px] text-slate-400">US-East (Fast)</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="server_node" value="eu" class="peer hidden" />
+                  <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 peer-checked:border-emerald-500 peer-checked:bg-emerald-950/20 text-center transition">
+                    <div class="text-xs font-bold text-white">Node 2</div>
+                    <div class="text-[10px] text-slate-400">EU-Central</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="server_node" value="asia" class="peer hidden" />
+                  <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 peer-checked:border-emerald-500 peer-checked:bg-emerald-950/20 text-center transition">
+                    <div class="text-xs font-bold text-white">Node 3</div>
+                    <div class="text-[10px] text-slate-400">Asia-South</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <!-- Phone Input with Country Preset helper -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Phone Number (With Country Code)</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-phone-flip text-sm"></i>
+                </div>
+                <input 
+                  type="text" 
+                  id="phoneNumber"
+                  placeholder="923001234567 or 14155552671"
+                  class="w-full pl-10 pr-24 py-3.5 bg-slate-900/90 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white font-mono placeholder-slate-500 outline-none transition"
+                />
+                <button 
+                  type="button" 
+                  onclick="formatPhoneDemo()"
+                  class="absolute right-2 top-2 px-3 py-1.5 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700">
+                  Sample
+                </button>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2">
+                <span>Examples: +92 (PK), +1 (US), +44 (UK), +234 (NG)</span>
+                <span id="phoneValidBadge" class="hidden text-emerald-400 font-semibold"><i class="fa-solid fa-circle-check"></i> Valid Format</span>
+              </div>
+            </div>
+            <!-- Action Button -->
+            <button 
+              id="generateBtn"
+              onclick="startPairingProcess()"
+              class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl shadow-glow-emerald transition duration-200 flex items-center justify-center gap-2 text-base">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Generate Pairing Code</span>
+            </button>
+          </div>
+        </div>
+        <!-- Terminal Output Simulation -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-300 space-y-2">
+          <div class="flex items-center justify-between text-slate-500 pb-2 border-b border-slate-800/80">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-500/80"></span>
+              <span class="ml-2 text-[10px]">baileys-websocket.log</span>
+            </span>
+            <span id="terminalStatus" class="text-[10px] uppercase font-bold text-slate-500">Idle</span>
+          </div>
+          <div id="terminalBody" class="h-28 overflow-y-auto space-y-1 text-slate-400">
+            <div class="terminal-line text-slate-500">System initialized. Awaiting pairing input...</div>
+          </div>
+        </div>
+      </div>
+      <!-- Display Code Result Panel (5 cols) -->
+      <div class="lg:col-span-5 glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-qrcode text-emerald-400"></i>
+            Pairing Code Result
+          </h3>
+          <p class="text-xs text-slate-400 mb-6">Your generated MD-Scorpion verification key will appear below.</p>
+          <!-- Display Box -->
+          <div id="codeContainer" class="glass-card rounded-2xl p-6 border-2 border-dashed border-slate-700/80 text-center relative overflow-hidden">
+            
+            <!-- Default Placeholder State -->
+            <div id="codePlaceholder" class="py-8 space-y-3">
+              <div class="w-16 h-16 mx-auto rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600">
+                <i class="fa-solid fa-lock text-2xl"></i>
+              </div>
+              <p class="text-xs text-slate-400">Click "Generate Pairing Code" to create an active 8-digit connection session.</p>
+            </div>
+            <!-- Active Code Display State (Hidden by default) -->
+            <div id="codeActiveState" class="hidden space-y-5">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                <i class="fa-solid fa-clock"></i> Expires in <span id="countdownTimer">60</span>s
+              </div>
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-2">WhatsApp Pairing Code</span>
+                <div class="flex items-center justify-center gap-2 font-mono font-black text-2xl sm:text-3xl text-emerald-400 tracking-widest bg-slate-950/80 py-4 px-3 rounded-xl border border-emerald-500/40 shadow-glow-emerald">
+                  <span id="codePart1">SCOR</span>
+                  <span class="text-slate-600">-</span>
+                  <span id="codePart2">P89X</span>
+                </div>
+              </div>
+              <button 
+                onclick="copyPairingCode()"
+                class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-bold rounded-xl transition flex items-center justify-center gap-2">
+                <i class="fa-regular fa-copy"></i>
+                <span id="copyBtnText">Copy Code to Clipboard</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- How to connect step-by-step -->
+        <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-800 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+            <i class="fa-solid fa-list-check"></i> Connection Steps
+          </h4>
+          <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+            <li>Open <strong class="text-white">WhatsApp</strong> on your phone.</li>
+            <li>Tap <strong class="text-white">Settings</strong> or <strong class="text-white">Menu (3 dots)</strong> &gt; <strong class="text-white">Linked Devices</strong>.</li>
+            <li>Tap <strong class="text-white">Link a Device</strong> &gt; Select <strong class="text-white">Link with phone number instead</strong>.</li>
+            <li>Enter the 8-digit code displayed above before timer expires.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+    <!-- TAB 2: BOT COMMANDS & INTERACTIVE SIMULATOR -->
+    <section id="tab-commands" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Command List & Search (7 cols) -->
+      <div class="lg:col-span-7 glass-panel rounded-2xl p-6 flex flex-col space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-ul text-emerald-400"></i>
+              Command Database
+            </h3>
+            <p class="text-xs text-slate-400">Explore over 150+ automated modules integrated into MD-Scorpion.</p>
+          </div>
+          <!-- Category Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <button onclick="filterCategory('all')" class="cmd-cat-btn text-xs px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-semibold">All</button>
+            <button onclick="filterCategory('media')" class="cmd-cat-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Media</button>
+            <button onclick="filterCategory('group')" class="cmd-cat-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Group</button>
+            <button onclick="filterCategory('ai')" class="cmd-cat-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">AI</button>
+          </div>
+        </div>
+        <!-- Search Bar -->
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+          <input 
+            type="text" 
+            id="cmdSearch"
+            onkeyup="searchCommands()"
+            placeholder="Search commands (e.g. .ytmp4, .ai, .kick)..." 
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-500"
+          />
+        </div>
+        <!-- Command Cards List Container -->
+        <div id="commandGrid" class="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
+          <!-- Commands inserted dynamically via JavaScript -->
+        </div>
+      </div>
+      <!-- Interactive WhatsApp Mockup Simulator (5 cols) -->
+      <div class="lg:col-span-5 glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+              Interactive Bot Simulator
+            </h3>
+            <span class="text-[10px] bg-slate-800 text-emerald-400 font-mono px-2 py-0.5 rounded border border-slate-700">Click command to test</span>
+          </div>
+          <!-- Phone Mockup Frame -->
+          <div class="w-full bg-slate-950 rounded-2xl border-4 border-slate-800 shadow-2xl overflow-hidden flex flex-col h-[480px]">
+            
+            <!-- WhatsApp Mock Header -->
+            <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-black font-bold text-xs">
+                  <i class="fa-solid fa-bug"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-white leading-tight">MD-Scorpion Assistant</div>
+                  <div class="text-[10px] text-emerald-400 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> online bot
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-slate-400 text-xs">
+                <i class="fa-solid fa-video"></i>
+                <i class="fa-solid fa-phone"></i>
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+            </div>
+            <!-- Chat Messages Display Area -->
+            <div id="chatWindow" class="flex-1 p-3 overflow-y-auto space-y-3 bg-[#0b141a] text-xs">
+              <div class="text-center my-1">
+                <span class="bg-slate-900/90 text-slate-400 text-[10px] px-2.5 py-1 rounded-md border border-slate-800">
+                  🔒 Messages are end-to-end encrypted with MD-Scorpion v4
+                </span>
+              </div>
+              <!-- Initial Bot Welcome Message -->
+              <div class="flex flex-col items-start max-w-[85%]">
+                <div class="bg-slate-800 text-slate-200 p-3 rounded-xl rounded-tl-none border border-slate-700/50 shadow space-y-1">
+                  <p class="font-bold text-emerald-400 text-[11px]">🦂 MD-SCORPION SYSTEM</p>
+                  <p>Welcome! Type or click any command from the left to test response output in real-time.</p>
+                  <span class="text-[9px] text-slate-400 block text-right">04:35 PM</span>
+                </div>
+              </div>
+            </div>
+            <!-- Chat Input Controls -->
+            <div class="p-2.5 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+              <input 
+                type="text" 
+                id="simInput"
+                onkeypress="handleSimKeyPress(event)"
+                placeholder="Type command like .menu or .ping" 
+                class="flex-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:border-emerald-500 placeholder-slate-500 font-mono"
+              />
+              <button 
+                onclick="sendSimMessage()"
+                class="w-9 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center justify-center transition">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- TAB 3: DEPLOYMENT & CONFIG BUILDER -->
+    <section id="tab-deploy" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Deployment Hosting Guides (6 cols) -->
+      <div class="lg:col-span-6 glass-panel rounded-2xl p-6 space-y-5">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i>
+            One-Click Cloud Deployment
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">Select your favorite cloud hosting provider to deploy MD-Scorpion 24/7 online.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Render -->
+          <a href="https://render.com" target="_blank" class="glass-card p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition flex flex-col justify-between space-y-3 group">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white group-hover:text-emerald-400 transition">Render.com</span>
+              <i class="fa-solid fa-server text-emerald-400 text-lg"></i>
+            </div>
+            <p class="text-[11px] text-slate-400">Free web service hosting with automatic GitHub integration.</p>
+            <span class="text-[10px] font-bold uppercase text-emerald-400 flex items-center gap-1">Deploy Guide <i class="fa-solid fa-arrow-right text-[8px]"></i></span>
+          </a>
+          <!-- Railway -->
+          <a href="https://railway.app" target="_blank" class="glass-card p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition flex flex-col justify-between space-y-3 group">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white group-hover:text-emerald-400 transition">Railway App</span>
+              <i class="fa-solid fa-train text-cyan-400 text-lg"></i>
+            </div>
+            <p class="text-[11px] text-slate-400">High performance persistent container runtime for WhatsApp bots.</p>
+            <span class="text-[10px] font-bold uppercase text-cyan-400 flex items-center gap-1">Deploy Guide <i class="fa-solid fa-arrow-right text-[8px]"></i></span>
+          </a>
+          <!-- Koyeb -->
+          <a href="https://koyeb.com" target="_blank" class="glass-card p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition flex flex-col justify-between space-y-3 group">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white group-hover:text-emerald-400 transition">Koyeb</span>
+              <i class="fa-solid fa-microchip text-purple-400 text-lg"></i>
+            </div>
+            <p class="text-[11px] text-slate-400">Serverless micro-VM deployment with fast setup.</p>
+            <span class="text-[10px] font-bold uppercase text-purple-400 flex items-center gap-1">Deploy Guide <i class="fa-solid fa-arrow-right text-[8px]"></i></span>
+          </a>
+          <!-- VPS / Ubuntu -->
+          <a href="#vps" onclick="alert('VPS Guide: Run `git clone https://github.com/MD-Scorpion && cd MD-Scorpion && npm install && npm start` on Ubuntu 22.04')" class="glass-card p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition flex flex-col justify-between space-y-3 group">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white group-hover:text-emerald-400 transition">VPS / Linux</span>
+              <i class="fa-solid fa-terminal text-yellow-400 text-lg"></i>
+            </div>
+            <p class="text-[11px] text-slate-400">Ubuntu 22.04 / Debian PM2 setup for enterprise uptime.</p>
+            <span class="text-[10px] font-bold uppercase text-yellow-400 flex items-center gap-1">CLI Commands <i class="fa-solid fa-arrow-right text-[8px]"></i></span>
+          </a>
+        </div>
+        <!-- Deployment Wizard Notes -->
+        <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2">
+          <div class="font-bold text-emerald-400 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info"></i> Important Environment Variables
+          </div>
+          <p class="text-slate-400">
+            Make sure to add your generated <code class="text-emerald-300 font-mono">SESSION_ID</code> from Tab 1 into your host environment parameters so MD-Scorpion logs in automatically.
+          </p>
+        </div>
+      </div>
+      <!-- Config Builder Tool (6 cols) -->
+      <div class="lg:col-span-6 glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-5">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2 mb-1">
+            <i class="fa-solid fa-sliders text-emerald-400"></i>
+            Interactive Environment Config Builder
+          </h3>
+          <p class="text-xs text-slate-400 mb-4">Customize your bot parameters and generat
